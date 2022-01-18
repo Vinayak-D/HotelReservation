@@ -36,6 +36,8 @@ Please read the 5 test cases of which cases 1-4 cover the above edge cases.
 2. **nDays** = number of Calendar days (per room)
 3. **nBookedDays** = number of days booked by the customer (<nDays) - (checkOutDate - checkInDate)
 
+The 3 methods are
+
 1. **checkIfHotelBooked()**: nRooms - since it has to search each room to see if it's booked or not.
 
 2. **checkReservationDates()**: 2*nDays + 2*nBookedDays - since this method first extracts all the dates from the Calendar list, then checks if the checkinDate and checkOutDate falls within this list, along with getting their indices within the list. Obtaining these indices are important since then the second operation (+ nBookedDays) goes directly to the section of the calendar between the check-in/out dates. The second iteration of nBookedDays checks if the ID is 'none' or assigned to a customer ID. Each of these days has to be checked. NOTE: To see if the check
