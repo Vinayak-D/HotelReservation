@@ -32,15 +32,15 @@ Please read the 5 test cases of which cases 1-4 cover the above edge cases.
 
 ## The time complexity for some of the methods is as follows: Let the variables represent:
 
-1. nRooms = number of total Rooms
-2. nDays = number of Calendar days (per room)
-3. nBookedDays = number of days booked by the customer (<nDays) - (checkOutDate - checkInDate)
+1. **nRooms** = number of total Rooms
+2. **nDays** = number of Calendar days (per room)
+3. **nBookedDays** = number of days booked by the customer (<nDays) - (checkOutDate - checkInDate)
 
-1. checkIfHotelBooked(): nRooms - since it has to search each room to see if it's booked or not.
+1. **checkIfHotelBooked()**: nRooms - since it has to search each room to see if it's booked or not.
 
-2. checkReservationDates(): 2*nDays + 2*nBookedDays - since this method first extracts all the dates from the Calendar list, then checks if the checkinDate and checkOutDate falls within this list, along with getting their indices within the list. Obtaining these indices are important since then the second operation (+ nBookedDays) goes directly to the section of the calendar between the check-in/out dates. The second iteration of nBookedDays checks if the ID is 'none' or assigned to a customer ID. Each of these days has to be checked. NOTE: To see if the check
+2. **checkReservationDates()**: 2*nDays + 2*nBookedDays - since this method first extracts all the dates from the Calendar list, then checks if the checkinDate and checkOutDate falls within this list, along with getting their indices within the list. Obtaining these indices are important since then the second operation (+ nBookedDays) goes directly to the section of the calendar between the check-in/out dates. The second iteration of nBookedDays checks if the ID is 'none' or assigned to a customer ID. Each of these days has to be checked. NOTE: To see if the check
 
-3. bookCustomer(): nBookedDays - this method assigns the customer ID to the section of the calendar within the check-in/out dates, to each booked day. Since it is called after checkReservationDates(), there is no need to check again if the ID assigned to the room date is 'none' prior to booking. If this check was added here, the complexity would be 2*nBookedDays. The reservation flag inside checkReservationDates() value tells the makeReservation() method if the dates fall within the range and if there is no active booking present simultaneously.
+3. **bookCustomer()**: nBookedDays - this method assigns the customer ID to the section of the calendar within the check-in/out dates, to each booked day. Since it is called after checkReservationDates(), there is no need to check again if the ID assigned to the room date is 'none' prior to booking. If this check was added here, the complexity would be 2*nBookedDays. The reservation flag inside checkReservationDates() value tells the makeReservation() method if the dates fall within the range and if there is no active booking present simultaneously.
 
 ## Class Diagram
 
