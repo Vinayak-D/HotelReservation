@@ -1,6 +1,6 @@
 # HotelReservation
 ## A simple hotel reservation system
-To get the code running, please download the repo and run main.py, you can select a test case (testCases.py). Please look at the test cases to see how the program is initialized.
+To get the code running, please download the repo and run **main.py**, you can select a test case (**testCases.py**). Please look at the test cases to see how the program is initialized.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
