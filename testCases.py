@@ -1,9 +1,8 @@
 #All the Test Cases
-from ReservationClass import Reservation
+from model.reservation import Reservation
 from operator import attrgetter
 from datetime import date
 from dateutil.relativedelta import relativedelta
-
 #Please read first!------------------------------------------------------------
 
 #The Reservation class takes 4 parameters: number of standard rooms, number of 
@@ -44,13 +43,12 @@ def testCase1():
     dateIn = attrgetter(*Reservation.attrs)(dateToday)
     dateOut = dateToday + relativedelta(days = 1)
     dateOut = attrgetter(*Reservation.attrs)(dateOut)
-    
-    R = Reservation(0,0,0,0)
-    R.addCustomer('Vin','Desh',0,1234567891)
-    R.makeReservation('VD7891',dateIn,dateOut)
-    R.addCustomer('John','Doe',0,1234567891)
+    reservation = Reservation(0, 0, 0, 0)
+    reservation.addCustomer('Vin', 'Desh', 0, 1234567891)
+    reservation.makeReservation('VD7891', dateIn, dateOut)
+    reservation.addCustomer('John', 'Doe', 0, 1234567891)
     #this should return the 'Sold Out' message
-    R.makeReservation('JD7891',dateIn,dateOut)
+    reservation.makeReservation('JD7891', dateIn, dateOut)
     
     #Expected output: 'JD7891 Hotel is sold out for your selected dates!'
 
@@ -67,13 +65,13 @@ def testCase2():
     dateOut = dateToday + relativedelta(days = 1)
     dateOut = attrgetter(*Reservation.attrs)(dateOut)
     
-    R = Reservation(1,0,0,1)
-    R.addCustomer('Vin','Desh',0,1234567891)
-    R.addCustomer('John','Doe',0,1234567891)
-    R.makeReservation('VD7891',dateIn,dateOut)
-    R.cancelReservation('VD7891')
+    reservation = Reservation(1, 0, 0, 1)
+    reservation.addCustomer('Vin', 'Desh', 0, 1234567891)
+    reservation.addCustomer('John', 'Doe', 0, 1234567891)
+    reservation.makeReservation('VD7891', dateIn, dateOut)
+    reservation.cancelReservation('VD7891')
     #John should be able to make a reservation 
-    R.makeReservation('JD7891',dateIn,dateOut)
+    reservation.makeReservation('JD7891', dateIn, dateOut)
     
     #Expected output, both reservation invoices
     
@@ -103,15 +101,15 @@ def testCase3():
     dateJout = dateToday + relativedelta(days = 13)
     dateJout = attrgetter(*Reservation.attrs)(dateJout)  
     
-    R = Reservation(1,1,1,30)
-    R.addCustomer('Vin','Desh',0,123456789)
-    R.addCustomer('John','Doe',0,123456789)
-    R.makeReservation('VD6789',dateVin,dateVout)
+    reservation = Reservation(1, 1, 1, 30)
+    reservation.addCustomer('Vin', 'Desh', 0, 123456789)
+    reservation.addCustomer('John', 'Doe', 0, 123456789)
+    reservation.makeReservation('VD6789', dateVin, dateVout)
     #This reservation should not be booked
-    R.makeReservation('VD6789',dateVin,dateVout2)
+    reservation.makeReservation('VD6789', dateVin, dateVout2)
     #This reservation should not show Vin's room selection due to overlapping dates
     #since dateJin is before dateVout
-    R.makeReservation('JD6789',dateJin,dateJout)
+    reservation.makeReservation('JD6789', dateJin, dateJout)
     
 def testCase4():
     
@@ -135,14 +133,14 @@ def testCase4():
     dateOut3 = dateToday + relativedelta(days = 4)
     dateOut3 = attrgetter(*Reservation.attrs)(dateOut3) 
     
-    R = Reservation(0,1,0,6)
-    R.addCustomer('Vin','Desh',0,123456789)
-    R.addCustomer('John','Doe',0,123456789)
-    R.makeReservation('VD6789',dateVIn,dateOut)
-    R.makeReservation('JD6789',dateOut,dateOut2)
+    reservation = Reservation(0, 1, 0, 6)
+    reservation.addCustomer('Vin', 'Desh', 0, 123456789)
+    reservation.addCustomer('John', 'Doe', 0, 123456789)
+    reservation.makeReservation('VD6789', dateVIn, dateOut)
+    reservation.makeReservation('JD6789', dateOut, dateOut2)
     #Vin's reservation should not be able to modify due to conflict
     #Attempt to modify dates with checkout date conflicting with John
-    R.modifyReservation('VD6789',dateVIn,dateOut3)
+    reservation.modifyReservation('VD6789', dateVIn, dateOut3)
     #The expected output should be the dates resetting and Vin being able to rebook the same room
 
 def testCase5():
@@ -165,15 +163,15 @@ def testCase5():
     date4 = dateToday + relativedelta(days = 9)
     date4 = attrgetter(*Reservation.attrs)(date4)      
     
-    R = Reservation(10,10,10,45)
-    R.addCustomer('Vin','Desh',0,123456789)
-    R.addCustomer('David','Venuto',0,123456789)
+    reservation = Reservation(10, 10, 10, 45)
+    reservation.addCustomer('Vin', 'Desh', 0, 123456789)
+    reservation.addCustomer('David', 'Venuto', 0, 123456789)
     #Choose different dates to completely avoid any conflicts
-    R.makeReservation('VD6789',date1,date2)
-    R.makeReservation('DV6789',date3,date4)
+    reservation.makeReservation('VD6789', date1, date2)
+    reservation.makeReservation('DV6789', date3, date4)
     
     #This is your choice, you can choose any random dates here, and modify anyone
-    R.modifyReservation('VD6789',date1,date4)
+    reservation.modifyReservation('VD6789', date1, date4)
     
     
     
