@@ -1,5 +1,5 @@
 #Customer Class
-from model.invoice import Invoice
+from src.invoice import Invoice
 from datetime import date
 
 class Customer:

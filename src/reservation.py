@@ -1,6 +1,6 @@
 # makeReservation Class (Top Level)
-from model.hotel import Hotel
-from model.customer import Customer
+from src.hotel import Hotel
+from src.customer import Customer
 from operator import attrgetter
 
 class Reservation:
@@ -17,9 +17,9 @@ class Reservation:
         #The current selected Customer
         self.currentCustomer = None
         #The current customer select flag
-        self.cFlag = 0
+        self.cFlag = False
         #The successful reservation booking flag
-        self.bookedFlag = 0
+        self.bookedFlag = False
         #The current active Room
         self.activeRoom = None
         self.cindex = 0
@@ -41,7 +41,7 @@ class Reservation:
     #below methods are for the current Customer
     def makeReservation(self, ID, chkInDate, chkOutDate):
         #reset booking flag at the start
-        self.bookedFlag = 0
+        self.bookedFlag = False
         #switch to the current customer
         if self.getCurrentCustomer(ID):
             #assign dates to the customer
@@ -54,13 +54,13 @@ class Reservation:
                         roomSel = input('Choose a room from the available list: ').upper()
                         self.activeRoom = self.cHotel.findSpecificRoom(roomSel)
                         flag = self.activeRoom.checkReservationDates(dateIn, dateOut)[0]
-                        if flag == 1:
+                        if flag == True:
                             self.activeRoom.bookCustomer(ID)
                             self.currentCustomer.assignCustomerRoom(roomSel)
                             amount = self.currentCustomer.returnCustomerDays()*self.activeRoom.returnRoomPrice()
                             self.currentCustomer.chargeCustomer(amount)
                             self.returnReservationDetails(ID)
-                            self.bookedFlag = 1
+                            self.bookedFlag = True
                         else:
                             print('Booking unsuccessful for customer ID:',ID)
                             print('Failed to assign customer booking dates')
@@ -146,8 +146,8 @@ class Reservation:
         try:
             self.cIndex = self.customerData['ID'].index(str(ID))
             self.currentCustomer = self.customerData['Customers'][self.cIndex]
-            self.cFlag = 1
+            self.cFlag = True
         except ValueError:
             print('The selected customer does not exist within the database')
-            self.cFlag = 0
+            self.cFlag = False
         return self.cFlag

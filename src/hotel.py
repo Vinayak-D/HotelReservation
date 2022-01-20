@@ -1,5 +1,6 @@
 #Hotel Class
-from model.room import Room
+from src.room import Room
+from src.enumerations import roomType
 
 class Hotel:
     def __init__(self, name, nSRooms, nDRooms, nERooms, n):
@@ -31,19 +32,19 @@ class Hotel:
         
         #Append instances of room/customer based on standard rooms
         for i in range(self.nSRooms):
-            r = Room('S', n)
+            r = Room(roomType.STANDARD, n)
             self.roomsData['ID'].append(str(i+1) + 'S')
             self.roomsData['Room'].append(r)
             
         #Append instances of room/customer based on deluxe rooms
         for i in range(self.nDRooms):
-            r = Room('D', n)
+            r = Room(roomType.DELUXE, n)
             self.roomsData['ID'].append(str(i+1) + 'D')
             self.roomsData['Room'].append(r)
         
         #Append instances of room/customer based on executive rooms
         for i in range(self.nERooms):
-            r = Room('E', n)
+            r = Room(roomType.EXECUTIVE, n)
             self.roomsData['ID'].append(str(i+1) + 'E')
             self.roomsData['Room'].append(r)
             

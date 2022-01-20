@@ -1,6 +1,6 @@
 # Room Class
-from model.roomCalendar import Calendar
-from model.enumerations import roomReservationStatus
+from src.roomCalendar import Calendar
+from src.enumerations import roomReservationStatus, roomType
 
 class Room():
     
@@ -15,17 +15,17 @@ class Room():
         self.suiteType = suite
         self.status = Room.reservedStatus['1']
         self.roomCal = Calendar(n)
-        self.rFlag = 0
+        self.rFlag = False
         self.rangeStart = None
         self.rangeEnd = None
-        self.bookFlag = 0
+        self.bookFlag = False
         
         #Set price based on suite type (S or D or E)
-        if self.suiteType == 'S':
+        if self.suiteType == roomType.STANDARD:
             self.price = 100
-        elif self.suiteType == 'D':
+        elif self.suiteType == roomType.DELUXE:
             self.price = 200
-        elif self.suiteType == 'E':
+        elif self.suiteType == roomType.EXECUTIVE:
             self.price = 300
     
     def returnRoomCalendar(self):
@@ -43,7 +43,7 @@ class Room():
 
     def checkReservationDates(self, chkInDate, chkOutDate):
         #Re-initialize at the start
-        self.rFlag = 0
+        self.rFlag = False
         self.rangeStart = None
         self.rangeEnd = None
         #list comprehension to get only all the dates in the list (remove the ID section)
@@ -60,13 +60,13 @@ class Room():
             result = all(elem == 'none' for elem in idOnly)
             if result:
                 self.status = Room.reservedStatus['1']  
-                self.rFlag = 1
+                self.rFlag = True
             else:
                 self.status = Room.reservedStatus['2']
-                self.rFlag = 0
+                self.rFlag = False
         else:
             print('Dates out of range or invalid values')
-            self.rFlag = 0
+            self.rFlag = False
         return self.rFlag, self.status
     
     def cancelBookingByID(self, ID):

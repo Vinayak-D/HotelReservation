@@ -1,5 +1,5 @@
 #All the Test Cases
-from model.reservation import Reservation
+from src.reservation import Reservation
 from operator import attrgetter
 from datetime import date
 from dateutil.relativedelta import relativedelta
