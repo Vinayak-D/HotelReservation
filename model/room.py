@@ -1,15 +1,16 @@
 # Room Class
-from CalendarClass import Calendar
+from model.roomCalendar import Calendar
+from model.enumerations import roomReservationStatus
 
 class Room():
     
     reservedStatus = {}
     #Available Room
-    reservedStatus['1'] = 1
+    reservedStatus['1'] = roomReservationStatus.AVAILABLE
     #Reserved room
-    reservedStatus['2'] = 0
+    reservedStatus['2'] = roomReservationStatus.RESERVED
     
-    def __init__(self,suite,n):
+    def __init__(self, suite, n):
         
         self.suiteType = suite
         self.status = Room.reservedStatus['1']
@@ -36,11 +37,11 @@ class Room():
     def returnRoomPrice(self):
         return self.price
     
-    def bookCustomer(self,ID):
-            for i in range(self.rangeStart,self.rangeEnd):
+    def bookCustomer(self, ID):
+            for i in range(self.rangeStart, self.rangeEnd):
                 self.roomCal.returnAllbookingDays()[i][1]=ID
 
-    def checkReservationDates(self,chkInDate,chkOutDate):
+    def checkReservationDates(self, chkInDate, chkOutDate):
         #Re-initialize at the start
         self.rFlag = 0
         self.rangeStart = None
@@ -68,7 +69,7 @@ class Room():
             self.rFlag = 0
         return self.rFlag, self.status
     
-    def cancelBookingByID(self,ID):
-        for i in range(0,len(self.roomCal.returnAllbookingDays())):
-            if self.roomCal.returnAllbookingDays()[i][1]==ID:
+    def cancelBookingByID(self, ID):
+        for i in range(0, len(self.roomCal.returnAllbookingDays())):
+            if self.roomCal.returnAllbookingDays()[i][1] == ID:
                 self.roomCal.returnAllbookingDays()[i][1] = 'none'

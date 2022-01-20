@@ -1,15 +1,15 @@
 # makeReservation Class (Top Level)
-from HotelClass import Hotel
-from CustomerClass import Customer
+from model.hotel import Hotel
+from model.customer import Customer
 from operator import attrgetter
 
 class Reservation:
     
     #date attribute
-    attrs = ('year','month','day')
+    attrs = ('year', 'month', 'day')
     
-    def __init__(self,nSRooms,nDRooms,nERooms,n):
-        self.H = Hotel('Hotel 1',nSRooms,nDRooms,nERooms,n)
+    def __init__(self, nSRooms, nDRooms, nERooms, n):
+        self.cHotel = Hotel('Hotel 1', nSRooms, nDRooms, nERooms, n)
         #Initialize Empty Customer Hash Table (instance and ID)
         self.customerData = {}
         self.customerData['ID'] = []
@@ -24,35 +24,35 @@ class Reservation:
         self.activeRoom = None
         self.cindex = 0
         #Print the booking date range (same for all rooms - customer should see this)
-        anyRoom = self.H.returnRoomsData()['Room'][0]
+        anyRoom = self.cHotel.returnRoomsData()['Room'][0]
         print('Your check in and check out dates must be within:')
         print(anyRoom.returnRoomCalendarRange())
     
     #add a customer and create a unique reservation ID
-    def addCustomer(self,fname,lname,numGuests,number):
-        c = Customer(fname,lname,numGuests,number)
-        cRID = c.returnReservationID()
+    def addCustomer(self, fname, lname, numGuests, number):
+        customer = Customer(fname, lname, numGuests, number)
+        cRID = customer.returnReservationID()
         if cRID not in self.customerData['ID']:
-            self.customerData['Customers'].append(c)
+            self.customerData['Customers'].append(customer)
             self.customerData['ID'].append(cRID)
         else:
             print('Customer already exists!')
 
     #below methods are for the current Customer
-    def makeReservation(self,ID,chkInDate,chkOutDate):
+    def makeReservation(self, ID, chkInDate, chkOutDate):
         #reset booking flag at the start
         self.bookedFlag = 0
         #switch to the current customer
         if self.getCurrentCustomer(ID):
             #assign dates to the customer
-            self.currentCustomer.assignCustomerDates(chkInDate,chkOutDate)
+            self.currentCustomer.assignCustomerDates(chkInDate, chkOutDate)
             dateIn, dateOut = self.currentCustomer.returnCustomerDates()
-            if self.H.checkIfHotelBooked(dateIn, dateOut) == 0:
+            if self.cHotel.checkIfHotelBooked(dateIn, dateOut) == 0:
                 if self.currentCustomer.returnCustomerRooms() == []:
                     try:
-                        print('\nBooking for ID',ID)
+                        print('\nBooking for ID', ID)
                         roomSel = input('Choose a room from the available list: ').upper()
-                        self.activeRoom = self.H.findSpecificRoom(roomSel)
+                        self.activeRoom = self.cHotel.findSpecificRoom(roomSel)
                         flag = self.activeRoom.checkReservationDates(dateIn, dateOut)[0]
                         if flag == 1:
                             self.activeRoom.bookCustomer(ID)
@@ -68,10 +68,10 @@ class Reservation:
                         print('Incorrect Room Selection Choice')
                 else:
                     print('\n')
-                    print(ID,'is already booked in Room:',self.currentCustomer.returnCustomerRooms())
+                    print(ID, 'is already booked in Room:', self.currentCustomer.returnCustomerRooms())
                     print('\n')
             else:
-                print(ID,':Hotel is sold out for the selected dates!')
+                print(ID, ':Hotel is sold out for the selected dates!')
         else:
             print('Invalid ID')
         return self.bookedFlag
@@ -85,25 +85,25 @@ class Reservation:
                 roomsAssigned = []
                 print('Either the index is out of range or there is no room booking!')
             if roomsAssigned != []:
-                    room = self.H.findSpecificRoom(roomsAssigned)
+                    room = self.cHotel.findSpecificRoom(roomsAssigned)
                     #cancel reservation in room calendar (remove ID)
                     room.cancelBookingByID(ID)
                     amount = self.currentCustomer.returnCustomerCharge()
                     self.currentCustomer.refundCustomer(amount)
                     self.currentCustomer.resetCustomerData()
-                    print('Reservation',ID, 'Cancelled')
+                    print('Reservation', ID, 'Cancelled')
                     #Delete customer data from the reservation database
                     del self.customerData['ID'][self.cIndex]
                     del self.customerData['Customers'][self.cIndex]
             else:
-                print('No rooms assigned for customer',ID)
+                print('No rooms assigned for customer', ID)
         else:
             print('Invalid ID')
         
-    def returnReservationDetails(self,ID):
+    def returnReservationDetails(self, ID):
         #find customer by ID index, go to that customer
         if self.getCurrentCustomer(ID):
-            hname = self.H.returnName()
+            hname = self.cHotel.returnName()
             (fname,lname,guests,number) = self.currentCustomer.returnCustomerDetails()
             totCharge = self.currentCustomer.returnCustomerCharge()
             rooms = self.currentCustomer.returnCustomerRooms()
@@ -112,36 +112,37 @@ class Reservation:
                 rSel = rooms[0]
             else:
                 rSel = rooms
-            self.currentCustomer.cInvoice.printBill(hname,fname,lname,guests,number,rSel,totCharge,dates[0],dates[1],ID)
+            self.currentCustomer.cInvoice.printBill(hname, fname, lname, guests, number,\
+                                                    rSel, totCharge, dates[0], dates[1], ID)
         else:
             print('Invalid ID')
     
-    def modifyReservation(self,ID,newInDate,newOutDate):
+    def modifyReservation(self, ID, newInDate, newOutDate):
         #find customer by ID index, go to that customer
         if self.getCurrentCustomer(ID):
             rooms = self.currentCustomer.returnCustomerRooms()
             if rooms:
                 #Store old data incase modification not successful
-                (fname,lname,numGuests,number) = self.currentCustomer.returnCustomerDetails()
+                (fname, lname, numGuests, number) = self.currentCustomer.returnCustomerDetails()
                 oldDates = self.currentCustomer.returnCustomerDates()
-                print(ID,'has room',rooms,'booked between',oldDates[0],'and',oldDates[1])
+                print(ID, 'has room', rooms, 'booked between', oldDates[0], 'and', oldDates[1])
                 #Cancel and re-initialize customer
                 self.cancelReservation(ID)
-                self.addCustomer(fname,lname,numGuests,number)
+                self.addCustomer(fname, lname, numGuests, number)
                 #Reserve with new dates
-                bFlag = self.makeReservation(ID,newInDate,newOutDate)
+                bFlag = self.makeReservation(ID, newInDate, newOutDate)
                 if not bFlag:
                 #Reserve with old dates as before
                     print('Modification unsuccessful since another customer is booked, resetting dates...\n')
                     oldcInDate = attrgetter(*Reservation.attrs)(oldDates[0])
                     oldcOutDate = attrgetter(*Reservation.attrs)(oldDates[1])
-                    self.makeReservation(ID,oldcInDate,oldcOutDate)
+                    self.makeReservation(ID, oldcInDate, oldcOutDate)
             else:
                 print('No rooms booked!')
         else:
             print('Invalid ID')
         
-    def getCurrentCustomer(self,ID):
+    def getCurrentCustomer(self, ID):
         try:
             self.cIndex = self.customerData['ID'].index(str(ID))
             self.currentCustomer = self.customerData['Customers'][self.cIndex]
